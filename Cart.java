@@ -5,11 +5,11 @@ import java.util.Map;
 
 class Cart {
     Map<Product, Integer> products = new HashMap<>();
-    int shipping_fees =30;
+    float shipping_fees =30;
     public void setShippingFees(int shipping_fees) {
         this.shipping_fees = shipping_fees;
     }
-    public int getShippingFees() {
+    public float getShippingFees() {
         return shipping_fees;
     }
     public boolean isEmpty() {
@@ -27,7 +27,7 @@ class Cart {
         }
         return true;
     }
-    public void print_cart() {
+    public void print_cart(float balance) {
         if (isEmpty()) {
             System.out.println("Error: Cart is empty");
             return;
@@ -43,17 +43,19 @@ class Cart {
         System.out.println("Total package weight " + total_weight + " g ");
         System.out.println();
         System.out.println("** Checkout receipt **");
-        int subtotal = 0;
+        float subtotal = 0;
         for (Map.Entry<Product, Integer> entry : products.entrySet()) {
             Product product = entry.getKey();
             int quantity = entry.getValue();
             subtotal += product.price * quantity;
             System.out.println(quantity + "x " + product.name + "        " + product.price * quantity);
         }
+        float CurrentBalance=balance-(subtotal + shipping_fees);
         System.out.println("----------------------");
         System.out.println("Subtotal         " + subtotal);
         System.out.println("Shipping         " + shipping_fees);
         System.out.println("Amount           " + (subtotal + shipping_fees));
+        System.out.println("Current Customer balance  " + CurrentBalance);
         send_to_shipping_service();
     }
     public void send_to_shipping_service() {
