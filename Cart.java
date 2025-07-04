@@ -23,14 +23,13 @@ class Cart {
             total += product.price * quantity;
         }
         if (total > balance) {
-            System.out.println("Error: Insufficient balance");
             return false;
         }
         return true;
     }
     public void print_cart() {
         if (isEmpty()) {
-            System.out.println("Cart is empty");
+            System.out.println("Error: Cart is empty");
             return;
         }
         System.out.println("** Shipment notice **");
