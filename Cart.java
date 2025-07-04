@@ -1,0 +1,81 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+class Cart {
+    Map<Product, Integer> products = new HashMap<>();
+    int shipping_fees =30;
+    public void setShippingFees(int shipping_fees) {
+        this.shipping_fees = shipping_fees;
+    }
+    public int getShippingFees() {
+        return shipping_fees;
+    }
+    public boolean isEmpty() {
+        return products.isEmpty();
+    }
+    public boolean isSufficientBalance(float balance) {
+        float total = 0;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            total += product.price * quantity;
+        }
+        if (total > balance) {
+            System.out.println("Error: Insufficient balance");
+            return false;
+        }
+        return true;
+    }
+    public void print_cart() {
+        if (isEmpty()) {
+            System.out.println("Cart is empty");
+            return;
+        }
+        System.out.println("** Shipment notice **");
+        int total_weight = 0;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            total_weight += product.weight * quantity;
+            System.out.println(quantity + "x " + product.name + "        " + product.weight + "g");
+        }
+        System.out.println("Total package weight " + total_weight + " g ");
+        System.out.println();
+        System.out.println("** Checkout receipt **");
+        int subtotal = 0;
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            int quantity = entry.getValue();
+            subtotal += product.price * quantity;
+            System.out.println(quantity + "x " + product.name + "        " + product.price * quantity);
+        }
+        System.out.println("----------------------");
+        System.out.println("Subtotal         " + subtotal);
+        System.out.println("Shipping         " + shipping_fees);
+        System.out.println("Amount           " + (subtotal + shipping_fees));
+        send_to_shipping_service();
+    }
+    public void send_to_shipping_service() {
+        List<Shipping_Service> shipping_services = new ArrayList<>();
+        for (Map.Entry<Product, Integer> entry : products.entrySet()) {
+            Product product = entry.getKey();
+            if (product.isShippable) {
+                shipping_services.add(product);
+            }
+        }
+        for (Shipping_Service shipping_service : shipping_services) {
+            System.out.println("Sending " + shipping_service.getName() + " with weight " + shipping_service.getWeight() + " g to shipping service");
+        }
+    }
+    public void add_to_cart(Product product, int quantity) {
+        if (product.quantity < quantity) {
+            System.out.println("Error: not enough quantity of product: " + product.name);
+            return;
+        }
+        product.quantity -= quantity;
+        products.put(product, quantity);
+    }
+
+}
